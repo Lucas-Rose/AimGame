@@ -57,4 +57,8 @@ public class TargetDispenser : MonoBehaviour
     {
         return distances[0];
     }
+    public int getRemainingRounds()
+    {
+        return distances.Count;
+    }
 }

@@ -83,6 +83,10 @@ public class GameManager : MonoBehaviour
                 promptText.text = waitTime.ToString("f0");
                 if(waitTime < 0)
                 {
+                    if(scoreList.Count == scoreContainer.childCount && dispenser.getRemainingRounds() == 0)
+                    {
+                        Debug.Log("Finito");
+                    }
                     if(scoreList.Count == scoreContainer.childCount)
                     {
                         ResetScores();
