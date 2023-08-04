@@ -7,25 +7,63 @@ public class FPSCamera : MonoBehaviour
 
     [SerializeField] private Transform player;
     [SerializeField] private float mouseSensitivity;
-    private float rotationX;   
+    [SerializeField] private GameObject gameManager;
+    private GameManager gManager;
+    private float rotationX;
+    private bool canLook;
 
     void Start()
     {
-        Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+        gManager = gameManager.GetComponent<GameManager>();
+        canLook = true;
     }
 
     // Update is called once per frame
     void Update()
     {
-        Vector2 input = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y")) * mouseSensitivity;
-        rotationX -= input.y;
-        rotationX = Mathf.Clamp(rotationX, -90f, 90f);
-        transform.localEulerAngles = Vector3.right * rotationX;
+        if (canLook)
+        {
+            Vector2 input = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y")) * mouseSensitivity;
+            rotationX -= input.y;
+            rotationX = Mathf.Clamp(rotationX, -90f, 90f);
+            transform.localRotation = Quaternion.Euler(rotationX, 0f, 0f);
+            player.Rotate(Vector3.up * input.x);
+        }
+        
+        if (Input.GetMouseButton(0))
+        {
+            Shoot();
+        }
 
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            ToggleCanLook(true);
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+    }
 
-        player.Rotate(Vector3.up * input.x);
+    public void Shoot()
+    {
+        RaycastHit hit;
+        if(Physics.Raycast(transform.position, transform.forward, out hit, float.PositiveInfinity))
+        {
+            if (hit.transform.gameObject.CompareTag("Target"))
+            {
+                gManager.HitTarget(hit);
+            }
+        }
+    }
 
-
+    public void ToggleCanLook(bool state)
+    {
+        canLook = state;
+        if (canLook)
+        {
+            rotationX = 0;
+            player.localRotation = Quaternion.Euler(0, 0, 0);
+            transform.localRotation = Quaternion.Euler(0, 0, 0);
+        }
     }
 }
