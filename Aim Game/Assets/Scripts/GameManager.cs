@@ -33,6 +33,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TMP_Text avgText;
     [SerializeField] private TMP_Text promptText;
     [SerializeField] private TMP_Text roundText;
+    [SerializeField] private TMP_Text distanceText;
 
     private void Start()
     {
@@ -42,6 +43,7 @@ public class GameManager : MonoBehaviour
         fpsCamera.ResetRotation();
         round = 1;
         roundText.text = "Round: " + round;
+        distanceText.text = "Distance: " + dispenser.getActiveDistance().ToString("f1") + "m";
     }
     // Start is called before the first frame update
     public void HitTarget(RaycastHit hit)
@@ -56,6 +58,7 @@ public class GameManager : MonoBehaviour
         {
             round++;
             roundText.text = "Round: " + round;
+            distanceText.text = "Distance: " + dispenser.NextDistance().ToString("f1") + "m";
         }
     }
 
