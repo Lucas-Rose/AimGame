@@ -20,7 +20,6 @@ public class TargetDispenser : MonoBehaviour
     void Start()
     {
         dispensorMode = DispenseMode.OnScreen;
-        DispenseTarget();
     }
 
     // Update is called once per frame

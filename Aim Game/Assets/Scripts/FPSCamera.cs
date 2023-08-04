@@ -16,7 +16,7 @@ public class FPSCamera : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.Locked;
         gManager = gameManager.GetComponent<GameManager>();
-        canLook = true;
+        canLook = false;
     }
 
     // Update is called once per frame
@@ -59,11 +59,11 @@ public class FPSCamera : MonoBehaviour
     public void ToggleCanLook(bool state)
     {
         canLook = state;
-        if (canLook)
-        {
-            rotationX = 0;
-            player.localRotation = Quaternion.Euler(0, 0, 0);
-            transform.localRotation = Quaternion.Euler(0, 0, 0);
-        }
+    }
+    public void ResetRotation()
+    {
+        rotationX = 0;
+        player.localRotation = Quaternion.Euler(0, 0, 0);
+        transform.localRotation = Quaternion.Euler(0, 0, 0);
     }
 }

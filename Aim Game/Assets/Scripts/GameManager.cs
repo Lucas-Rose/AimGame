@@ -5,32 +5,90 @@ using TMPro;
 
 public class GameManager : MonoBehaviour
 {
+    [Header("Objects")]
     [SerializeField] private TargetDispenser dispenser;
     [SerializeField] private FPSCamera fpsCamera;
-    [SerializeField] private List<float> scoreList;
-    [SerializeField] private Transform scoreContainer;
-    [SerializeField] private TMP_Text avgText;
+    private int round;
+
+    [Header("Time Elements")]
+    [SerializeField] private float maxWaitTime;
+    [SerializeField] private Vector2 spawnDelayMinMax;
+    private float waitTime;
+    private float spawnDelay;
     private float currTime;
     private float spawnTime;
     private float shootTime;
 
+    private enum GameState
+    {
+        Waiting,
+        Spawning,
+        Shooting
+    }
+    private GameState gameState;
+
+    [Header("Text Elements")]
+    [SerializeField] private List<float> scoreList;
+    [SerializeField] private Transform scoreContainer;
+    [SerializeField] private TMP_Text avgText;
+    [SerializeField] private TMP_Text promptText;
+    [SerializeField] private TMP_Text roundText;
 
     private void Start()
     {
-        spawnTime = currTime;
+        gameState = GameState.Waiting;
+        waitTime = maxWaitTime;
+        fpsCamera.ToggleCanLook(false);
+        fpsCamera.ResetRotation();
+        round = 1;
+        roundText.text = "Round: " + round;
     }
     // Start is called before the first frame update
     public void HitTarget(RaycastHit hit)
     {
-        fpsCamera.ToggleCanLook(true);
+        fpsCamera.ToggleCanLook(false);
+        fpsCamera.ResetRotation();
         Destroy(hit.transform.gameObject);
+        gameState = GameState.Waiting;
+        waitTime = maxWaitTime;
         UpdateScore();
-        dispenser.DispenseTarget();
+        if (scoreList.Count == scoreContainer.childCount)
+        {
+            round++;
+            roundText.text = "Round: " + round;
+        }
     }
 
     private void Update()
     {
         currTime += Time.deltaTime;
+        switch (gameState)
+        {
+            case (GameState.Spawning):
+                spawnDelay -= Time.deltaTime;
+                promptText.text = "";
+                if(spawnDelay <= 0)
+                {
+                    dispenser.DispenseTarget();
+                    spawnTime = currTime;
+                    fpsCamera.ToggleCanLook(true);
+                    gameState = GameState.Shooting;
+                }
+                break;
+            case (GameState.Waiting):
+                waitTime -= Time.deltaTime;
+                promptText.text = waitTime.ToString("f0");
+                if(waitTime < 0)
+                {
+                    if(scoreList.Count == scoreContainer.childCount)
+                    {
+                        ResetScores();
+                    }
+                    spawnDelay = Random.Range(spawnDelayMinMax.x, spawnDelayMinMax.y);
+                    gameState = GameState.Spawning;
+                }
+                break;
+        }
     }
 
     public void UpdateScore()
@@ -53,5 +111,18 @@ public class GameManager : MonoBehaviour
             ret += scoreList[i];
         }
         return ret;
+    }
+    public void ResetScores()
+    {
+        for(int i = 0; i < scoreContainer.childCount; i++)
+        {
+            scoreContainer.GetChild(i).GetComponent<TMP_Text>().text = "Round " + (i + 1) + ':';
+        }
+        for(int i = 0; i < scoreList.Count; i++)
+        {
+            scoreList.RemoveAt(i);
+            i--;
+        }
+        avgText.text = "Average: ";
     }
 }
