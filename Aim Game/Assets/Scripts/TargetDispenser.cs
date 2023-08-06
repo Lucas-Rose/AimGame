@@ -37,7 +37,7 @@ public class TargetDispenser : MonoBehaviour
         switch (dispensorMode)
         {
             case (DispenseMode.OnScreen):
-                Instantiate(targetPrefab, new Vector3(Random.Range(-distances[0] + 0.5f, distances[0] + 0.5f), Random.Range(0, distances[0] - 1), distances[0]), Quaternion.identity);
+                Instantiate(targetPrefab, new Vector3(Random.Range(-distances[0] + 0.5f, distances[0] + 0.5f), Random.Range(0, distances[0] * 0.8f), distances[0]), Quaternion.identity);
                 break;
             case (DispenseMode.OffScreen):
                 break;

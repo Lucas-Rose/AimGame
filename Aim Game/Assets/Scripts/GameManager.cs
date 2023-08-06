@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
     [Header("Objects")]
     [SerializeField] private TargetDispenser dispenser;
     [SerializeField] private FPSCamera fpsCamera;
+    [SerializeField] private AudioManager aManager;
     private int round;
 
     [Header("Time Elements")]
@@ -48,6 +49,7 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     public void HitTarget(RaycastHit hit)
     {
+        aManager.PlayNoise(3);
         fpsCamera.ToggleCanLook(false);
         fpsCamera.ResetRotation();
         Destroy(hit.transform.gameObject);
@@ -76,11 +78,12 @@ public class GameManager : MonoBehaviour
                     spawnTime = currTime;
                     fpsCamera.ToggleCanLook(true);
                     gameState = GameState.Shooting;
+                    aManager.PlayNoise(2);
                 }
                 break;
             case (GameState.Waiting):
                 waitTime -= Time.deltaTime;
-                promptText.text = waitTime.ToString("f0");
+                promptText.text = waitTime.ToString("f1");
                 if(waitTime < 0)
                 {
                     if(scoreList.Count == scoreContainer.childCount && dispenser.getRemainingRounds() == 0)
@@ -91,6 +94,7 @@ public class GameManager : MonoBehaviour
                     {
                         ResetScores();
                     }
+                    aManager.PlayNoise(1);
                     spawnDelay = Random.Range(spawnDelayMinMax.x, spawnDelayMinMax.y);
                     gameState = GameState.Spawning;
                 }
