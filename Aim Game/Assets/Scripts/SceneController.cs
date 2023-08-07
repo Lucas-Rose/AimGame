@@ -6,11 +6,6 @@ using TMPro;
 
 public class SceneController : MonoBehaviour
 {
-    [Header("Playtest Info")]
-    [SerializeField] private TMP_InputField nameText;
-    [SerializeField] private TMP_Dropdown skillText;
-    [SerializeField] private TMP_Dropdown firstTimeText;
-
     public static void LoadNextScene()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);

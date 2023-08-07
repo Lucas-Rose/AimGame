@@ -56,18 +56,20 @@ public class GameManager : MonoBehaviour
         api = GameObject.Find("API").GetComponent<RestAPI>();
         hasMoved = false;
     }
-    // Start is called before the first frame update
+
     public void HitTarget(RaycastHit hit)
     {
         aManager.PlayNoise(3);
         fpsCamera.ToggleCanLook(false);
         UpdateScore();
+        Debug.Log(player.transform.rotation.eulerAngles.y);
+
         api.AddRoundData(
             lastReaction.ToString(),
-            true,
+            dispenser.GetOnScreen(),
             dispenser.getActiveDistance().ToString(),
             new Vector2(hit.transform.position.x, hit.transform.position.y),
-            new Vector2(player.transform.localRotation.y, fpsCamera.gameObject.transform.localRotation.x),
+            new Vector2(player.transform.rotation.eulerAngles.y, fpsCamera.gameObject.transform.rotation.eulerAngles.x),
             misses,
             timeToMove
         );
@@ -110,7 +112,8 @@ public class GameManager : MonoBehaviour
                 {
                     if(scoreList.Count == scoreContainer.childCount && dispenser.getRemainingRounds() == 0)
                     {
-                        Debug.Log("Finito");
+                        Cursor.lockState = CursorLockMode.None;
+                        SceneController.LoadNextScene();
                     }
                     if(scoreList.Count == scoreContainer.childCount)
                     {

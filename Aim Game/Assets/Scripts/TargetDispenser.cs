@@ -18,20 +18,13 @@ public class TargetDispenser : MonoBehaviour
     OffScreen
     }
 
-    private DispenseMode dispensorMode;
+    [SerializeField] private DispenseMode dispensorMode;
 
-    // Start is called before the first frame update
-    void Start()
+
+    private void Start()
     {
-        dispensorMode = DispenseMode.OnScreen;
+        Debug.Log(GetOnScreen());
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void DispenseTarget()
     {
         switch (dispensorMode)
@@ -40,6 +33,7 @@ public class TargetDispenser : MonoBehaviour
                 Instantiate(targetPrefab, new Vector3(Random.Range(-distances[0] + 0.5f, distances[0] + 0.5f), Random.Range(0, distances[0] * 0.8f), distances[0]), Quaternion.identity);
                 break;
             case (DispenseMode.OffScreen):
+                Instantiate(targetPrefab, new Vector3(Random.Range(-distances[0] + 0.5f, distances[0] + 0.5f), Random.Range(0, -distances[0] * 0.8f), distances[0]), Quaternion.identity);
                 break;
         }
     }
@@ -60,5 +54,9 @@ public class TargetDispenser : MonoBehaviour
     public int getRemainingRounds()
     {
         return distances.Count;
+    }
+    public bool GetOnScreen()
+    {
+        return dispensorMode == DispenseMode.OnScreen;
     }
 }

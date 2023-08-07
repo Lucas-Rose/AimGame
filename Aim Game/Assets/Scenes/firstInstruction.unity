@@ -3161,6 +3161,7 @@ MonoBehaviour:
   nameText: {fileID: 1233845958}
   skillText: {fileID: 844614836}
   firstTimeText: {fileID: 1024908506}
+  startButton: {fileID: 1147942429}
 --- !u!4 &1336973319
 Transform:
   m_ObjectHideFlags: 0
@@ -5480,7 +5481,7 @@ PrefabInstance:
       objectReference: {fileID: 509010917}
     - target: {fileID: 1358725458597891454, guid: 04564282b4056e14c9294f16e95d00ab, type: 3}
       propertyPath: m_text
-      value: 'The best ''snaps'' and reaction times will be shown on a leaderboard
+      value: 'The best ''snaps'' and reaction times will be made known
 
 
         Don''t
@@ -5562,6 +5563,17 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
       objectReference: {fileID: 509010917}
+    - target: {fileID: 1358725460099185214, guid: 04564282b4056e14c9294f16e95d00ab, type: 3}
+      propertyPath: m_text
+      value: 'Make sure you''re using a mouse.
+
+
+        Make sure you''re connected
+        to the internet.
+
+
+        Make sure you''re on fullscreen.'
+      objectReference: {fileID: 0}
     - target: {fileID: 1358725460298214342, guid: 04564282b4056e14c9294f16e95d00ab, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 

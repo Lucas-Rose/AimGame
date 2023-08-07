@@ -12,6 +12,7 @@ public class RestAPI : MonoBehaviour
     [SerializeField] private TMP_InputField nameText;
     [SerializeField] private TMP_Dropdown skillText;
     [SerializeField] private TMP_Dropdown firstTimeText;
+    [SerializeField] private GameObject startButton;
 
     private void Start()
     {
@@ -19,6 +20,12 @@ public class RestAPI : MonoBehaviour
     }
     private static string PlaytestURL = "https://64d051a5ff953154bb78c435.mockapi.io/api/Playtests";
     private static string RoundURL = "https://64d051a5ff953154bb78c435.mockapi.io/api/Rounds";
+    private static string RoundTwoURL = "https://64d051a5ff953154bb78c435.mockapi.io/api/RoundsTwo";
+    private static string RoundThreeURL = "https://64d051a5ff953154bb78c435.mockapi.io/api/RoundsThree";
+    private static string RoundFourURL = "https://64d051a5ff953154bb78c435.mockapi.io/api/RoundsFour";
+    private static string RoundFiveURL = "https://64d051a5ff953154bb78c435.mockapi.io/api/RoundsFive";
+    private static int activeRoundURLIndex;
+    private static string[] roundURLs = { RoundURL, RoundTwoURL, RoundThreeURL, RoundFourURL, RoundFiveURL };
     private static string playtestID = "";
 
     public static IEnumerator GetPlaytestData()
@@ -29,9 +36,17 @@ public class RestAPI : MonoBehaviour
             ProcessRequest(request);
         }
     }
+
+    public static IEnumerator GetRoundData()
+    {
+        using (UnityWebRequest request = UnityWebRequest.Get(roundURLs[activeRoundURLIndex]))
+        {
+            yield return request.SendWebRequest();
+            ProcessRequest(request);
+        }
+    }
     public static IEnumerator PostPlaytestData(string name, string skill, string firstTime)
     {
-        Debug.Log("Posting");
         WWWForm form = new WWWForm();
         form.AddField("Name", $"{name}");
         form.AddField("Skill", $"{skill}");
@@ -47,6 +62,7 @@ public class RestAPI : MonoBehaviour
 
     public void AddPlaytest()
     {
+        startButton.SetActive(false);
         string firstTime = firstTimeText.options[firstTimeText.value].text == "Is" ? "Yes" : "No";
         string skill = skillText.options[skillText.value].text;
         StartCoroutine(PostPlaytestData(nameText.text, skill, firstTime));
@@ -55,6 +71,7 @@ public class RestAPI : MonoBehaviour
     public void AddRoundData(string killTime, bool onScreen, string distance, Vector2 targetPos, Vector2 playerRot, int misses, float timeToMove)
     {
         StartCoroutine(PostRoundData(killTime, onScreen, distance, targetPos, playerRot, misses, timeToMove));
+        StartCoroutine(GetRoundData());
     }
 
     public static IEnumerator PostRoundData(string killTime, bool onScreen, string distance, Vector2 targetPos, Vector2 playerRot, int misses, float timeToMove)
@@ -67,15 +84,15 @@ public class RestAPI : MonoBehaviour
         form.AddField("Distance", distance);
         form.AddField("targetXPos", targetPos.x.ToString());
         form.AddField("targetYPos", targetPos.y.ToString());
-        form.AddField("playerYRot", playerRot.x.ToString());
-        form.AddField("playerXRot", playerRot.y.ToString());
+        form.AddField("playerXRot", playerRot.x.ToString());
+        form.AddField("playerYRot", playerRot.y.ToString());
         form.AddField("Misses", misses);
         form.AddField("Shots", misses + 1);
         form.AddField("ReactionTime", timeToMove.ToString());
-        using (UnityWebRequest request = UnityWebRequest.Post(RoundURL, form))
+        using (UnityWebRequest request = UnityWebRequest.Post(roundURLs[activeRoundURLIndex], form))
         {
             yield return request.SendWebRequest();
-            StartPlaytest(request);
+            ProcessRequest(request);
         }
     }
 
@@ -89,6 +106,17 @@ public class RestAPI : MonoBehaviour
         {
             string json = req.downloadHandler.text;
             SimpleJSON.JSONNode stats = SimpleJSON.JSON.Parse(json);
+            if(stats["Misses"] != null)
+            {
+                if(stats[0] == "2")
+                {
+                    if (activeRoundURLIndex < roundURLs.Length - 1)
+                    {
+                        activeRoundURLIndex++;
+                    }
+                }
+            }
+            
         }
     }
 
@@ -102,10 +130,7 @@ public class RestAPI : MonoBehaviour
         {
             string json = req.downloadHandler.text;
             SimpleJSON.JSONNode stats = SimpleJSON.JSON.Parse(json);
-            if(stats["Name"] != null)
-            {
-                playtestID = stats["id"];
-            }
+            playtestID = stats["id"];
         }
     }
 }
