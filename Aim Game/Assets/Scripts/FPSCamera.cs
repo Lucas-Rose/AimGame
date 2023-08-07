@@ -31,9 +31,12 @@ public class FPSCamera : MonoBehaviour
             player.Rotate(Vector3.up * input.x);
         }
         
-        if (Input.GetMouseButton(0))
+        if (Input.GetMouseButtonDown(0))
         {
-            Shoot();
+            if (canLook)
+            {
+                Shoot();
+            }   
         }
 
         if (Input.GetKeyDown(KeyCode.P))
@@ -52,6 +55,10 @@ public class FPSCamera : MonoBehaviour
             if (hit.transform.gameObject.CompareTag("Target"))
             {
                 gManager.HitTarget(hit);
+            }
+            else
+            {
+                gManager.AddMiss();
             }
         }
     }

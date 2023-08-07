@@ -9,6 +9,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TargetDispenser dispenser;
     [SerializeField] private FPSCamera fpsCamera;
     [SerializeField] private AudioManager aManager;
+    [SerializeField] private RestAPI api;
+    [SerializeField] private GameObject player;
     private int round;
 
     [Header("Time Elements")]
@@ -19,7 +21,13 @@ public class GameManager : MonoBehaviour
     private float currTime;
     private float spawnTime;
     private float shootTime;
+    private float lastReaction;
+    private float timeToMove;
+    private bool hasMoved;
 
+    [Header("Gun Elements")]
+    private int shots;
+    private int misses;
     private enum GameState
     {
         Waiting,
@@ -45,17 +53,31 @@ public class GameManager : MonoBehaviour
         round = 1;
         roundText.text = "Round: " + round;
         distanceText.text = "Distance: " + dispenser.getActiveDistance().ToString("f1") + "m";
+        api = GameObject.Find("API").GetComponent<RestAPI>();
+        hasMoved = false;
     }
     // Start is called before the first frame update
     public void HitTarget(RaycastHit hit)
     {
         aManager.PlayNoise(3);
         fpsCamera.ToggleCanLook(false);
+        UpdateScore();
+        api.AddRoundData(
+            lastReaction.ToString(),
+            true,
+            dispenser.getActiveDistance().ToString(),
+            new Vector2(hit.transform.position.x, hit.transform.position.y),
+            new Vector2(player.transform.localRotation.y, fpsCamera.gameObject.transform.localRotation.x),
+            misses,
+            timeToMove
+        );
         fpsCamera.ResetRotation();
+
         Destroy(hit.transform.gameObject);
         gameState = GameState.Waiting;
         waitTime = maxWaitTime;
-        UpdateScore();
+        misses = 0;
+        hasMoved = false;
         if (scoreList.Count == scoreContainer.childCount)
         {
             round++;
@@ -99,6 +121,16 @@ public class GameManager : MonoBehaviour
                     gameState = GameState.Spawning;
                 }
                 break;
+            case (GameState.Shooting):
+                if (!hasMoved)
+                {
+                    if(Input.GetAxis("Mouse X") != 0 || Input.GetAxis("Mouse Y") != 0)
+                    {
+                        timeToMove = currTime - spawnTime;
+                        hasMoved = true;
+                    }
+                }
+                break;
         }
     }
 
@@ -108,6 +140,7 @@ public class GameManager : MonoBehaviour
         {
             shootTime = currTime;
             scoreList.Add(shootTime - spawnTime);
+            lastReaction = shootTime - spawnTime;
             scoreContainer.GetChild(scoreList.Count - 1).GetComponent<TMP_Text>().text += " " + scoreList[scoreList.Count - 1].ToString("f3");
             spawnTime = currTime;
             avgText.text = "Average: " + (getScoreSum() / scoreList.Count).ToString("f3");
@@ -135,5 +168,10 @@ public class GameManager : MonoBehaviour
             i--;
         }
         avgText.text = "Average: ";
+    }
+
+    public void AddMiss()
+    {
+        misses += 1;
     }
 }

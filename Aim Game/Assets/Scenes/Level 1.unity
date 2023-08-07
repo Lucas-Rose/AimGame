@@ -2598,6 +2598,8 @@ MonoBehaviour:
   dispenser: {fileID: 221120008}
   fpsCamera: {fileID: 1613547696}
   aManager: {fileID: 1578393008}
+  api: {fileID: 0}
+  player: {fileID: 793587213}
   maxWaitTime: 3
   spawnDelayMinMax: {x: 2, y: 4}
   scoreList: []
