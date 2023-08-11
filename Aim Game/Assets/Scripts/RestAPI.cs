@@ -68,27 +68,31 @@ public class RestAPI : MonoBehaviour
         StartCoroutine(PostPlaytestData(nameText.text, skill, firstTime));
     }
 
-    public void AddRoundData(string killTime, bool onScreen, string distance, Vector2 targetPos, Vector2 playerRot, int misses, float timeToMove)
+    public void AddRoundData(float killTime, bool onScreen, string distance, Vector2 targetPos, Vector3 hitPos, Vector2 playerRot, int misses, float timeToMove)
     {
-        StartCoroutine(PostRoundData(killTime, onScreen, distance, targetPos, playerRot, misses, timeToMove));
+        StartCoroutine(PostRoundData(killTime, onScreen, distance, targetPos, hitPos, playerRot, misses, timeToMove, killTime - timeToMove));
         StartCoroutine(GetRoundData());
     }
 
-    public static IEnumerator PostRoundData(string killTime, bool onScreen, string distance, Vector2 targetPos, Vector2 playerRot, int misses, float timeToMove)
+    public static IEnumerator PostRoundData(float killTime, bool onScreen, string distance, Vector2 targetPos, Vector3 hitPos, Vector2 playerRot, int misses, float timeToMove, float moveTime)
     {
         yield return GetPlaytestData();
         WWWForm form = new WWWForm();
         form.AddField("PlaytestID", $"{playtestID}");
-        form.AddField("KillTime", killTime);
+        form.AddField("KillTime", killTime.ToString());
         form.AddField("OnScreen", onScreen ? "Yes" : "No");
         form.AddField("Distance", distance);
         form.AddField("targetXPos", targetPos.x.ToString());
         form.AddField("targetYPos", targetPos.y.ToString());
+        form.AddField("hitXPos", hitPos.x.ToString());
+        form.AddField("hitYPos", hitPos.y.ToString());
+        form.AddField("hitZPos", hitPos.z.ToString());
         form.AddField("playerXRot", playerRot.x.ToString());
         form.AddField("playerYRot", playerRot.y.ToString());
         form.AddField("Misses", misses);
         form.AddField("Shots", misses + 1);
         form.AddField("ReactionTime", timeToMove.ToString());
+        form.AddField("Time Moving", moveTime.ToString());
         using (UnityWebRequest request = UnityWebRequest.Post(roundURLs[activeRoundURLIndex], form))
         {
             yield return request.SendWebRequest();
@@ -108,7 +112,7 @@ public class RestAPI : MonoBehaviour
             SimpleJSON.JSONNode stats = SimpleJSON.JSON.Parse(json);
             if(stats["Misses"] != null)
             {
-                if(stats[0] == "2")
+                if(stats[0] == "100")
                 {
                     if (activeRoundURLIndex < roundURLs.Length - 1)
                     {

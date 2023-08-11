@@ -65,10 +65,11 @@ public class GameManager : MonoBehaviour
         Debug.Log(player.transform.rotation.eulerAngles.y);
 
         api.AddRoundData(
-            lastReaction.ToString(),
+            lastReaction,
             dispenser.GetOnScreen(),
             dispenser.getActiveDistance().ToString(),
             new Vector2(hit.transform.position.x, hit.transform.position.y),
+            hit.point,
             new Vector2(player.transform.rotation.eulerAngles.y, fpsCamera.gameObject.transform.rotation.eulerAngles.x),
             misses,
             timeToMove
