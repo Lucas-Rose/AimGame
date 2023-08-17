@@ -56,9 +56,9 @@ public class FPSCamera : MonoBehaviour
             {
                 gManager.HitTarget(hit);
             }
-            else
+            if (hit.transform.gameObject.CompareTag("miss"))
             {
-                gManager.AddMiss();
+                gManager.AddMiss(hit);
             }
         }
     }

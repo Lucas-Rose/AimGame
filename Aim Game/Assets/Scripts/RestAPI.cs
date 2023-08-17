@@ -24,6 +24,7 @@ public class RestAPI : MonoBehaviour
     private static string RoundThreeURL = "https://64d051a5ff953154bb78c435.mockapi.io/api/RoundsThree";
     private static string RoundFourURL = "https://64d051a5ff953154bb78c435.mockapi.io/api/RoundsFour";
     private static string RoundFiveURL = "https://64d051a5ff953154bb78c435.mockapi.io/api/RoundsFive";
+    private static string MissURL = "https://64d051a5ff953154bb78c435.mockapi.io/api/Misses";
     private static int activeRoundURLIndex;
     private static string[] roundURLs = { RoundURL, RoundTwoURL, RoundThreeURL, RoundFourURL, RoundFiveURL };
     private static string playtestID = "";
@@ -36,6 +37,7 @@ public class RestAPI : MonoBehaviour
             ProcessRequest(request);
         }
     }
+
 
     public static IEnumerator GetRoundData()
     {
@@ -74,6 +76,11 @@ public class RestAPI : MonoBehaviour
         StartCoroutine(GetRoundData());
     }
 
+    public void AddMissData(float time, int missNum, float tspm, bool onScreen, string distance, Vector2 targetPos, Vector3 hitPos, Vector2 playerRot)
+    {
+        StartCoroutine(PostMissData(time, missNum, tspm, onScreen, distance, targetPos, hitPos, playerRot));
+    }
+
     public static IEnumerator PostRoundData(float killTime, bool onScreen, string distance, Vector2 targetPos, Vector3 hitPos, Vector2 playerRot, int misses, float timeToMove, float moveTime)
     {
         yield return GetPlaytestData();
@@ -94,6 +101,30 @@ public class RestAPI : MonoBehaviour
         form.AddField("ReactionTime", timeToMove.ToString());
         form.AddField("Time Moving", moveTime.ToString());
         using (UnityWebRequest request = UnityWebRequest.Post(roundURLs[activeRoundURLIndex], form))
+        {
+            yield return request.SendWebRequest();
+            ProcessRequest(request);
+        }
+    }
+
+    public static IEnumerator PostMissData(float time, int missNum, float tspm, bool onScreen, string distance, Vector2 targetPos, Vector3 hitPos, Vector2 playerRot)
+    {
+        yield return GetPlaytestData();
+        WWWForm form = new WWWForm();
+        form.AddField("PlaytestID", $"{playtestID}");
+        form.AddField("Time", time.ToString());
+        form.AddField("Miss Number", missNum.ToString());
+        form.AddField("TSPM", tspm.ToString());
+        form.AddField("OnScreen", onScreen ? "Yes" : "No");
+        form.AddField("Distance", distance);
+        form.AddField("targetXPos", targetPos.x.ToString());
+        form.AddField("targetYPos", targetPos.y.ToString());
+        form.AddField("hitXPos", hitPos.x.ToString());
+        form.AddField("hitYPos", hitPos.y.ToString());
+        form.AddField("hitZPos", hitPos.z.ToString());
+        form.AddField("playerXRot", playerRot.x.ToString());
+        form.AddField("playerYRot", playerRot.y.ToString());
+        using (UnityWebRequest request = UnityWebRequest.Post(MissURL, form))
         {
             yield return request.SendWebRequest();
             ProcessRequest(request);

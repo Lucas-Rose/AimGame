@@ -23,6 +23,7 @@ public class GameManager : MonoBehaviour
     private float shootTime;
     private float lastReaction;
     private float timeToMove;
+    private float tspm;
     private bool hasMoved;
 
     [Header("Gun Elements")]
@@ -62,7 +63,6 @@ public class GameManager : MonoBehaviour
         aManager.PlayNoise(3);
         fpsCamera.ToggleCanLook(false);
         UpdateScore();
-        Debug.Log(player.transform.rotation.eulerAngles.y);
 
         api.AddRoundData(
             lastReaction,
@@ -174,8 +174,19 @@ public class GameManager : MonoBehaviour
         avgText.text = "Average: ";
     }
 
-    public void AddMiss()
+    public void AddMiss(RaycastHit hit)
     {
+        tspm = misses == 0 ? 0 : currTime - tspm;
         misses += 1;
+        api.AddMissData(
+            currTime,
+            misses,
+            tspm,
+            dispenser.GetOnScreen(),
+            dispenser.getActiveDistance().ToString(),
+            new Vector2(hit.transform.position.x, hit.transform.position.y),
+            hit.point,
+            new Vector2(player.transform.rotation.eulerAngles.y, fpsCamera.gameObject.transform.rotation.eulerAngles.x)
+        );
     }
 }
