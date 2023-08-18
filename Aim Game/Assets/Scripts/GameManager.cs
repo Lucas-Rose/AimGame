@@ -86,6 +86,7 @@ public class GameManager : MonoBehaviour
         {
             round++;
             roundText.text = "Round: " + round;
+            dispenser.NextDistance();
         }
     }
 
@@ -111,6 +112,10 @@ public class GameManager : MonoBehaviour
                 promptText.text = waitTime.ToString("f1");
                 if(waitTime < 0)
                 {
+                    Debug.Log("Finished Round!");
+                    Debug.Log(scoreList.Count == scoreContainer.childCount);
+                    Debug.Log(dispenser.getRemainingRounds());
+                    Debug.Log(dispenser.getRemainingRounds() == 0);
                     if(scoreList.Count == scoreContainer.childCount && dispenser.getRemainingRounds() == 0)
                     {
                         Cursor.lockState = CursorLockMode.None;
@@ -172,7 +177,7 @@ public class GameManager : MonoBehaviour
             i--;
         }
         avgText.text = "Average: ";
-        distanceText.text = "Distance: " + dispenser.NextDistance().ToString("f1") + "m";
+        distanceText.text = "Distance: " + dispenser.getActiveDistance().ToString("f1") + "m";
     }
 
     public void AddMiss(RaycastHit hit)
