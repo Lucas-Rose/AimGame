@@ -85,7 +85,6 @@ public class GameManager : MonoBehaviour
         {
             round++;
             roundText.text = "Round: " + round;
-            distanceText.text = "Distance: " + dispenser.NextDistance().ToString("f1") + "m";
         }
     }
 
@@ -172,6 +171,7 @@ public class GameManager : MonoBehaviour
             i--;
         }
         avgText.text = "Average: ";
+        distanceText.text = "Distance: " + dispenser.NextDistance().ToString("f1") + "m";
     }
 
     public void AddMiss(RaycastHit hit)

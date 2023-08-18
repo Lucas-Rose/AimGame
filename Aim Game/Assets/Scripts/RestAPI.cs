@@ -34,7 +34,7 @@ public class RestAPI : MonoBehaviour
         using (UnityWebRequest request = UnityWebRequest.Get(PlaytestURL))
         {
             yield return request.SendWebRequest();
-            ProcessRequest(request);
+            ProcessRequest(request, false, false);
         }
     }
 
@@ -44,7 +44,7 @@ public class RestAPI : MonoBehaviour
         using (UnityWebRequest request = UnityWebRequest.Get(roundURLs[activeRoundURLIndex]))
         {
             yield return request.SendWebRequest();
-            ProcessRequest(request);
+            ProcessRequest(request, true, false);
         }
     }
     public static IEnumerator PostPlaytestData(string name, string skill, string firstTime)
@@ -72,6 +72,7 @@ public class RestAPI : MonoBehaviour
 
     public void AddRoundData(float killTime, bool onScreen, string distance, Vector2 targetPos, Vector3 hitPos, Vector2 playerRot, int misses, float timeToMove)
     {
+        Debug.Log(roundURLs[activeRoundURLIndex]);
         StartCoroutine(PostRoundData(killTime, onScreen, distance, targetPos, hitPos, playerRot, misses, timeToMove, killTime - timeToMove));
         StartCoroutine(GetRoundData());
     }
@@ -103,7 +104,7 @@ public class RestAPI : MonoBehaviour
         using (UnityWebRequest request = UnityWebRequest.Post(roundURLs[activeRoundURLIndex], form))
         {
             yield return request.SendWebRequest();
-            ProcessRequest(request);
+            ProcessRequest(request, true, true);
         }
     }
 
@@ -127,11 +128,11 @@ public class RestAPI : MonoBehaviour
         using (UnityWebRequest request = UnityWebRequest.Post(MissURL, form))
         {
             yield return request.SendWebRequest();
-            ProcessRequest(request);
+            ProcessRequest(request, false, true);
         }
     }
 
-    private static void ProcessRequest(UnityWebRequest req)
+    private static void ProcessRequest(UnityWebRequest req, bool round, bool post)
     {
         if (req.result == UnityWebRequest.Result.ConnectionError)
         {
@@ -141,9 +142,10 @@ public class RestAPI : MonoBehaviour
         {
             string json = req.downloadHandler.text;
             SimpleJSON.JSONNode stats = SimpleJSON.JSON.Parse(json);
-            if(stats["Misses"] != null)
+
+            if (round && !post)
             {
-                if(stats[0] == "100")
+                if(stats.AsArray[stats.AsArray.Count - 1][0] == "100")
                 {
                     if (activeRoundURLIndex < roundURLs.Length - 1)
                     {
@@ -151,7 +153,6 @@ public class RestAPI : MonoBehaviour
                     }
                 }
             }
-            
         }
     }
 
