@@ -75,6 +75,7 @@ public class GameManager : MonoBehaviour
             timeToMove
         );
         fpsCamera.ResetRotation();
+        tspm = 0;
 
         Destroy(hit.transform.gameObject);
         gameState = GameState.Waiting;
