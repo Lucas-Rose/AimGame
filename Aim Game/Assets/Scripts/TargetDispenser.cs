@@ -20,24 +20,21 @@ public class TargetDispenser : MonoBehaviour
 
     [SerializeField] private DispenseMode dispensorMode;
 
+    private GameObject activeTarget;
 
-    private void Start()
-    {
-        Debug.Log(GetOnScreen());
-    }
     public void DispenseTarget()
     {
         switch (dispensorMode)
         {
             case (DispenseMode.OnScreen):
-                Instantiate(targetPrefab,
+                activeTarget = Instantiate(targetPrefab,
                     new Vector3(Random.Range(-distances[0] + 0.5f, distances[0] + 0.5f),
                     Random.Range(0, distances[0] * 0.8f),
                     distances[0]),
                     Quaternion.Euler(new Vector3(0,0,0)));
                 break;
             case (DispenseMode.OffScreen):
-                Instantiate(targetPrefab,
+                activeTarget = Instantiate(targetPrefab,
                     new Vector3(Random.Range(-distances[0] + 0.5f, distances[0] + 0.5f),
                     Random.Range(0, -distances[0] * 0.8f),
                     distances[0]),
@@ -66,5 +63,9 @@ public class TargetDispenser : MonoBehaviour
     public bool GetOnScreen()
     {
         return dispensorMode == DispenseMode.OnScreen;
+    }
+    public GameObject GetTarget()
+    {
+        return activeTarget;
     }
 }

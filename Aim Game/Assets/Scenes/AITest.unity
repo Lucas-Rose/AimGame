@@ -805,6 +805,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5286094702641110467, guid: 117efcac00dd5cc41bcb3c5ca2f47c35, type: 3}
+      propertyPath: ai
+      value: 
+      objectReference: {fileID: 1059796186021250680}
+    - target: {fileID: 5286094702641110467, guid: 117efcac00dd5cc41bcb3c5ca2f47c35, type: 3}
       propertyPath: player
       value: 
       objectReference: {fileID: 1059796186021250677}
@@ -1802,6 +1806,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7320bf3eb1e53d345b726b4f78cf1507, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cameraTransform: {fileID: 1059796187285922007}
+  missIndicator: {fileID: 2079013566117212008, guid: ce93cc8772be6d545b01665bd64b0337, type: 3}
+  reactionTime: 0.228167
+  missGradient: 0.1041988
+  xAccuracy: 0.363578
+  yAccuracy: 0.129237
+  activeTarget: {fileID: 0}
 --- !u!1 &1059796187285922004
 GameObject:
   m_ObjectHideFlags: 0

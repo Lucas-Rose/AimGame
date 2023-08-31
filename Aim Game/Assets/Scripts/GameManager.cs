@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private AudioManager aManager;
     [SerializeField] private RestAPI api;
     [SerializeField] private GameObject player;
+    [SerializeField] private AIController ai;
     private int round;
 
     [Header("Time Elements")]
@@ -49,12 +50,15 @@ public class GameManager : MonoBehaviour
     {
         gameState = GameState.Waiting;
         waitTime = maxWaitTime;
-        fpsCamera.ToggleCanLook(false);
-        fpsCamera.ResetRotation();
+        if(fpsCamera != null)
+        {
+            fpsCamera.ToggleCanLook(false);
+            fpsCamera.ResetRotation();
+            api = GameObject.Find("API").GetComponent<RestAPI>();
+        }
         round = 1;
         roundText.text = "Round: " + round;
         distanceText.text = "Distance: " + dispenser.getActiveDistance().ToString("f1") + "m";
-        api = GameObject.Find("API").GetComponent<RestAPI>();
         hasMoved = false;
     }
 
@@ -101,8 +105,16 @@ public class GameManager : MonoBehaviour
                 if(spawnDelay <= 0)
                 {
                     dispenser.DispenseTarget();
+                    if(ai!= null)
+                    {
+                        ai.StartAiming(dispenser.GetTarget().transform);
+                    }
                     spawnTime = currTime;
-                    fpsCamera.ToggleCanLook(true);
+                    if(fpsCamera != null)
+                    {
+                        fpsCamera.ToggleCanLook(true);
+                    }
+                    
                     gameState = GameState.Shooting;
                     aManager.PlayNoise(2);
                 }
@@ -112,10 +124,6 @@ public class GameManager : MonoBehaviour
                 promptText.text = waitTime.ToString("f1");
                 if(waitTime < 0)
                 {
-                    Debug.Log("Finished Round!");
-                    Debug.Log(scoreList.Count == scoreContainer.childCount);
-                    Debug.Log(dispenser.getRemainingRounds());
-                    Debug.Log(dispenser.getRemainingRounds() == 0);
                     if(scoreList.Count == scoreContainer.childCount && dispenser.getRemainingRounds() == 0)
                     {
                         Cursor.lockState = CursorLockMode.None;
