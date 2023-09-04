@@ -65,10 +65,11 @@ public class GameManager : MonoBehaviour
     public void HitTarget(RaycastHit hit)
     {
         aManager.PlayNoise(3);
-        fpsCamera.ToggleCanLook(false);
-        UpdateScore();
+        if(fpsCamera != null)
+        {
+            fpsCamera.ToggleCanLook(false);
 
-        api.AddRoundData(
+            api.AddRoundData(
             lastReaction,
             dispenser.GetOnScreen(),
             dispenser.getActiveDistance().ToString(),
@@ -78,8 +79,17 @@ public class GameManager : MonoBehaviour
             misses,
             timeToMove
         );
-        fpsCamera.ResetRotation();
-        tspm = 0;
+            fpsCamera.ResetRotation();
+            tspm = 0;
+        }
+        
+
+        if(ai != null)
+        {
+            ai.ResetRotation();
+            ai.SetCanMove(false);
+        }
+        UpdateScore();
 
         Destroy(hit.transform.gameObject);
         gameState = GameState.Waiting;
@@ -107,6 +117,7 @@ public class GameManager : MonoBehaviour
                     dispenser.DispenseTarget();
                     if(ai!= null)
                     {
+                        ai.SetCanMove(true);
                         ai.StartAiming(dispenser.GetTarget().transform);
                     }
                     spawnTime = currTime;

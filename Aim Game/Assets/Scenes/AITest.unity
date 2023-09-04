@@ -197,7 +197,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-58492
+  m_Name: pb_Mesh-1466
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -361,7 +361,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-58488
+  m_Name: pb_Mesh-1434
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -946,7 +946,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-58490
+  m_Name: pb_Mesh-1450
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -1110,7 +1110,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-58494
+  m_Name: pb_Mesh-1482
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -1274,7 +1274,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-58486
+  m_Name: pb_Mesh-1418
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -1694,6 +1694,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fd37a89956c646d47afcce183aed45d6, type: 3}
+--- !u!114 &2001765929 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5286094702641110467, guid: 117efcac00dd5cc41bcb3c5ca2f47c35, type: 3}
+  m_PrefabInstance: {fileID: 1255157801}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ffe8d98e65b7b9744a08d374cb0ca853, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!33 &1059796186021250664
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -1808,11 +1819,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cameraTransform: {fileID: 1059796187285922007}
   missIndicator: {fileID: 2079013566117212008, guid: ce93cc8772be6d545b01665bd64b0337, type: 3}
-  reactionTime: 0.228167
-  missGradient: 0.1041988
+  gm: {fileID: 2001765929}
+  reactionTime: 0.38
+  aimingGradient: 0.0146718
+  missGradient: 0.5
   xAccuracy: 0.363578
   yAccuracy: 0.129237
-  activeTarget: {fileID: 0}
 --- !u!1 &1059796187285922004
 GameObject:
   m_ObjectHideFlags: 0
