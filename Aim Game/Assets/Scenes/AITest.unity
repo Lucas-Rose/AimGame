@@ -583,6 +583,10 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1750166227507306037, guid: cc13d268afb5f5e49923f2e68943078a, type: 3}
+      propertyPath: distances.Array.data[0]
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1750166227507306037, guid: cc13d268afb5f5e49923f2e68943078a, type: 3}
       propertyPath: distances.Array.data[1]
       value: 10
       objectReference: {fileID: 0}
